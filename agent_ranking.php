@@ -85,8 +85,97 @@ echo "</pre>";
                     </button>
                 </div>
             </form> -->
+            <!-- Yearly Ranking -->
+<div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div class="flex items-center justify-between">
+        <div class="w-full mb-4">
+           <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Yearly</h2>
+        </div>
+        
+        <!-- Search box -->
+        <div class="flex items-center space-x-4 mb-4 w-full">
+            <form action="" method="get" id="searchForm">
+                <div class="relative">
+                    <input type="text" id="searchInput" name="agent_name" value="<?= isset($_GET['agent_name']) ? $_GET['agent_name'] : '' ?>" placeholder="Search agents..." class="pl-10 pr-8 py-2 rounded-lg border border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none">
+                </div>
+            </form>
+        </div>
+        
+        <!-- CSV download button -->
+        <div class="flex items-center justify-end gap-2 p-2">
+            <a href="#" onclick="download_table_as_csv('agent_ranking');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+            </a>
+        </div>
+    </div>
+    
+    <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
+        <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
+            <table id="agent_ranking" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Agent Name</th>
+                    <?php 
+                    $current_year = date('Y');
+                    $years = range($current_year - 4, $current_year);
+                    foreach ($years as $year): ?>
+                        <th scope="col" class="px-4 py-3 w-[150px] <?= $year == $selected_year ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
+                            <form action="" method="get">
+                                <input type="hidden" name="year" value="<?= $year ?>">
+                                <div class="w-full flex gap-1 justify-between items-center">
+                                    <p class=""> <?= $year ?> </p>
+                                    <button type="submit" class="" <?= $year == $selected_year ? 'disabled' : '' ?>>
+                                        <?= isset($selected_year) && $year == $selected_year ? '<i class="fa-solid fa-sort-desc text-indigo-600"></i>' : '<i class="fa-solid fa-sort"></i>' ?>
+                                    </button>
+                                </div>
+                                <?php if (isset($_GET['agent_name'])): ?>
+                                    <input type="hidden" name="agent_name" value="<?= $_GET['agent_name'] ?>">
+                                <?php endif; ?>
+                            </form>
+                        </th>
+                    <?php endforeach; ?>
+                    <th scope="col" class="px-6 py-3">Total Gross Comm</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($filtered_ranked_agents)): ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td colspan="6" class="px-6 py-4 text-center">Data unavailable</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($filtered_ranked_agents as $agent): ?>
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <?= $agent['name'] ?? '' ?>
+                                </th>
+                                <?php foreach ($years as $year): ?>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col gap-2">
+                                            <div class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-xs font-medium">Rank: <?= $agent[$year]['rank'] ?? '' ?></div>
+                                            <div class="bg-green-500/40 border border-green-800 rounded-md px-2 py-1 text-xs font-medium">GC: <?= number_format($agent[$year]['gross_comms'] ?? 0, 2) ?> AED</div>
+                                        </div>
+                                    </td>
+                                <?php endforeach; ?>
+                                <td class="px-6 py-4">
+                                    <?= number_format(array_sum(array_column($agent, 'gross_comms')), 2) ?? '' ?> AED
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Yearly Ranking End -->
+            <div>
                 <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
                     <div class="flex items-center justify-between">
+                    <div class="w-full mb-4">
+                       <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Monthly</h2>
+                    </div>
                         <!-- search box -->
                         <div class="flex items-center justify-start space-x-4 mb-4 w-full">
                             <form action="" method="get" id="searchForm">
@@ -167,6 +256,7 @@ echo "</pre>";
                             </a>
                         </div>
                     </div>
+                    
                     <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
                         <!-- table container -->
                         <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
@@ -236,7 +326,6 @@ echo "</pre>";
                                     <?php endif; ?>
                                 </tbody>
                             </table>
-
                         </div>
                         <!-- pagination control -->
                         <!-- <div class="mt-4 w-full flex justify-center gap-1 py-2">
@@ -257,9 +346,103 @@ echo "</pre>";
                             <?php endif; ?>
                         </div> -->
                     </div>
-                </div>
-            </div>
+                                </div>
+                    <!--weekly-->
+                    <div class="p-4 shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+    <div class="flex items-center justify-between">
+        <div class="w-full mb-4">
+           <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200">Weekly</h2>
         </div>
+        <!-- Search box -->
+        <div class="flex items-center space-x-4 mb-4 w-full">
+            <form action="" method="get" id="searchForm">
+                <div class="relative">
+                    <input type="text" id="searchInput" name="agent_name" value="<?= isset($_GET['agent_name']) ? $_GET['agent_name'] : '' ?>" placeholder="Search agents..." class="pl-10 pr-8 py-2 rounded-lg border border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+            </form>
+        </div>
+        <!-- csv download button -->
+    <div class="flex items-center justify-end gap-2 p-2">
+                            <a href="#" onclick="download_table_as_csv('agent_ranking');" class="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500 transition duration-300" title="Download as CSV">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            </a>
+                        </div>
+    </div>
+    
+    <div class="pb-4 rounded-lg border-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 rounded-lg">
+        <div class="relative rounded-lg border-b border-gray-200 dark:border-gray-700 w-full overflow-auto">
+            <table id="agent_ranking" class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                                        <th scope="col" class="px-6 py-3">Agent Name</th>
+                                        <?php foreach (['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $month): ?>
+                                            <th scope="col" class="px-4 py-3 w-[150px] <?= $month == $selected_month ? 'bg-gray-100 dark:bg-gray-700 dark:text-white text-bold' : '' ?>">
+                                                <form action="" method="get" class="">
+                                                    <input type="hidden" name="month" value="<?= $month ?>">
+                                                    <input type="hidden" name="year" value="<?= isset($_GET['year']) ? $_GET['year'] : date('d/m/Y') ?>">
+                                                    <div class="w-full flex gap-1 justify-between items-center">
+                                                        <p class=""><?= $month ?></p>
+                                                        <button type="submit" class="" <?= $month == $selected_month ? 'disabled' : '' ?>>
+                                                            <?php
+                                                            if (isset($selected_month) && $month == $selected_month) {
+                                                                echo '<i class="fa-solid fa-sort-desc text-indigo-600"></i>';
+                                                            } else {
+                                                                echo '<i class="fa-solid fa-sort"></i>';
+                                                            }
+                                                            ?>
+                                                        </button>
+                                                    </div>
+                                                    <?php if (isset($_GET['agent_name'])): ?>
+                                                        <input type="hidden" name="agent_name" value="<?= $_GET['agent_name'] ?>">
+                                                    <?php endif; ?>
+                                                </form>
+                                            </th>
+                                        <?php endforeach; ?>
+                                        <th scope="col" class="px-6 py-3">Total gross Comm</th>
+                                    </tr>
+                                
+                </thead>
+                <tbody>
+                    <?php if (empty($filtered_ranked_agents)): ?>
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td colspan="9" class="px-6 py-4 text-center">Data unavailable</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($filtered_ranked_agents as $agent): ?>
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <?= $agent['name'] ?? '' ?>
+                                </th>
+                                <?php foreach (["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as $day): ?>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col gap-2">
+                                            <div class="bg-indigo-500/40 border border-indigo-800 rounded-md px-2 py-1 text-xs font-medium">Rank: <?= $agent[$day]['rank'] ?? '' ?></div>
+                                            <div class="bg-green-500/40 border border-green-800 rounded-md px-2 py-1 text-xs font-medium">GC: <?= number_format($agent[$day]['gross_comms'] ?? 0, 2) ?> AED</div>
+                                        </div>
+                                    </td>
+                                <?php endforeach; ?>
+                                <td class="px-6 py-4">
+                                    <?= number_format(array_sum(array_column($agent, 'gross_comms')), 2) ?? '' ?> AED
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+                    <!-------weekly end------>
+                </div>                
+            </div>
+        </div>        
     </div>
 </div>
 
