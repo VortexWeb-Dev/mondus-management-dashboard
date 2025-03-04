@@ -4,11 +4,9 @@ include_once "./crest/settings.php";
 include('includes/header.php');
 include('includes/sidebar.php');
 
-// include the api endpoint pages
 include_once "./data/fetch_deals.php";
 include_once "./data/fetch_users.php";
 
-// import utils
 include_once "./utils/index.php";
 
 $all_deals = get_all_deals();
@@ -17,8 +15,7 @@ $all_users = getUsers();
 $user_fields = get_user_fields();
 
 $current_user_id = getCurrentUser()['ID'];
-// $filter = ['CLOSED' => 'Y'];
-// $filter = ['ID' => $current_user_id,'STAGE_ID' => 'WON'];
+
 $filter = ['CATEGORY_ID' => 0];
 
 $select = [
@@ -40,12 +37,11 @@ $select = [
     'UF_CRM_1727626089404',
     'UF_CRM_1727628203466',
     //--------------------------------
-    'UF_CRM_1727626897246', // enum: down payment (completed)
-    'UF_CRM_1727626932600', // enum: dld payment (completed)
-    'UF_CRM_1727855585703', // enum: spa (executed)
-    //then accounts should get an email notification
-    'UF_CRM_1727855739514', // enum: deal status (completed)
-    // There should be pop up to write the reason for cancellation and Accounts should get notification for the cancellation with the reason
+    'UF_CRM_1727626897246', 
+    'UF_CRM_1727626932600', 
+    'UF_CRM_1727855585703', 
+    'UF_CRM_1727855739514',
+    
 ];
 
 $filtered_deals = getFilteredDeals($filter, $select);
@@ -109,7 +105,6 @@ foreach ($filtered_deals as $id => $deal) {
 
     if (isset($deal['UF_CRM_1728042953037'])) {
         $current_agent_deals[$id]['referral'] = map_enum($deal_fields, 'UF_CRM_1728042953037', $deal['UF_CRM_1728042953037']) ?? null;
-        // show the amount receivable if the referral is approved
         if ($deal['UF_CRM_1728042953037'] == 1295) {
             $current_agent_deals[$id]['amount'] = $deal['UF_CRM_1727628203466'] ?? null;
         } else {
@@ -127,8 +122,7 @@ foreach ($filtered_deals as $id => $deal) {
         $current_agent_deals[$id]['lead_source'] = 'field_not_defined';
     }
 
-    // $current_agent_deals[$id]['documents_upload'] = $deal['UF_CRM_1727855739514'];
-
+    
     if (isset($deal['UF_CRM_1727626897246'])) {
         $downPayment = map_enum($deal_fields, 'UF_CRM_1727626897246', $deal['UF_CRM_1727626897246']);
         $current_agent_deals[$id]['down_payment'] = $downPayment ?? null;
@@ -159,7 +153,6 @@ foreach ($filtered_deals as $id => $deal) {
 }
 
 echo "<pre>";
-// print_r($filtered_deals);
 echo "</pre>";
 
 ?>

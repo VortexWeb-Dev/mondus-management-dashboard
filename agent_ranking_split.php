@@ -3,7 +3,6 @@ include_once __DIR__ . "/crest/crest.php";
 include_once __DIR__ . "/crest/settings.php";
 include('includes/header.php');
 
-// include the fetch deals page
 include_once __DIR__ . "/data/fetch_deals.php";
 include_once __DIR__ . "/data/fetch_users.php";
 
@@ -11,7 +10,6 @@ include_once __DIR__ . "/controllers/calculate_agent_rank.php";
 
 $global_ranking = calculateAgentRank();
 
-//get the filter data from get request
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 
 $selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : null;
@@ -22,21 +20,13 @@ $current_agent_name = $current_agent['NAME'] ?? '' . ' ' . $current_agent['LAST_
 function getMothwiseFilteredRankings($monthwise_rank_data, $selected_agent_id)
 {
     $ranking = [
-        // 'id' => [
-        //     'name' => 'Name',
-        //     'rankings' => [
-        //         'Jan' => [
-        //             'gross_comms' => 0,
-        //             'rank' => 0
-        //         ],
-        //     ]
-        // ]
+        
     ];
 
     foreach ($monthwise_rank_data as $month => $agents) {
         foreach ($agents as $agent_id => $agent) {
             if ($agent_id == $selected_agent_id) {
-                //set the name only once
+                
                 if (!isset($ranking[$agent_id]['name'])) {
                     $ranking[$agent_id]['name'] = $agent['name'];
                 }
@@ -94,7 +84,6 @@ function getYearlyFilteredRankings($global_ranking, $selected_agent_id)
     foreach ($global_ranking as $year => $year_data) {
         foreach ($year_data['yearly_rank'] as $agent_id => $agent) {
             if ($agent_id == $selected_agent_id) {
-                //set the name only once
                 if (!isset($ranking[$agent_id]['name'])) {
                     $ranking[$agent_id]['name'] = $agent['name'];
                 }

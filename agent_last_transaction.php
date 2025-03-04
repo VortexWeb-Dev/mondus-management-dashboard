@@ -3,39 +3,31 @@ include_once __DIR__ . "/crest/crest.php";
 include_once __DIR__ . "/crest/settings.php";
 include('includes/header.php');
 
-// include the fetch deals page
 include_once __DIR__ . "/data/fetch_deals.php";
 include_once __DIR__ . "/data/fetch_users.php";
 
-// utility functions
 include_once __DIR__ . "/utils/index.php";
 
 $selected_agent_id = isset($_GET['agent_id']) ? $_GET['agent_id'] : null;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$userFilter = $selected_agent_id ? ['id' => $selected_agent_id, 'UF_DEPARTMENT' => 5] : ['UF_DEPARTMENT' => 5]; // get sales department members only
+$userFilter = $selected_agent_id ? ['id' => $selected_agent_id, 'UF_DEPARTMENT' => 5] : ['UF_DEPARTMENT' => 5]; 
 
 $userData = get_paginated_users($page, $userFilter);
 $users = $userData['users'] ?? [];
 
 $user_ids = array_column($users, 'ID');
 
-// echo "<pre>";
-// print_r($user_ids);
-// echo "</pre>";
-
-// pagination
 $total_agents = $userData['total'] ?? 0;
 $total_pages = ceil($total_agents / 50);
 
-// get the filter data from get request
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 
 $filter = [
     'CATEGORY_ID' => 0,
     '>=BEGINDATE' => "$selected_year-01-01",
     '<=BEGINDATE' => "$selected_year-12-31",
-    '@ASSIGNED_BY_ID' => [...$user_ids], // get the deals of the specific user type, i.e - sales
+    '@ASSIGNED_BY_ID' => [...$user_ids], 
 ];
 
 
@@ -47,13 +39,12 @@ $deal_fields = get_deal_fileds();
 $agents = [];
 
 if (!empty($deals)) {
-    // fetch details from the users
     foreach ($users as $user) {
         $agents[$user['ID']]["id"] = $user['ID'];
         $agents[$user['ID']]["first_name"] = $user['NAME'] ?? '';
         $agents[$user['ID']]["last_name"] = $user['LAST_NAME'] ?? '';
         $agents[$user['ID']]["middle_name"] = $user['SECOND_NAME'] ?? '';
-        // map hired_by value
+        
         if (isset($user['UF_USR_1728535335261'])) {
             $hiredBy = map_enum($user_fields, 'UF_USR_1728535335261', $user['UF_USR_1728535335261']);
             $agents[$user['ID']]["hired_by"] = $hiredBy ?? null;
@@ -63,10 +54,10 @@ if (!empty($deals)) {
         $agents[$user['ID']]["joining_date"] = date('Y-m-d', strtotime($user['UF_USR_1734594730996'])) ?? null;
     }
 
-    //fetch details from the deals
+    
     foreach ($deals as $deal) {
         if (isset($agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"])) {
-            // Only update if the current deal is latest one
+            
             if (strtotime($agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"]) < date('Y-m-d', strtotime($deal['BEGINDATE']))) {
                 $agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"] = date('Y-m-d', strtotime($deal['BEGINDATE'])) ?? null;
 
@@ -80,14 +71,14 @@ if (!empty($deals)) {
                 $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1741000869656'] ?? null;
                 $agents[$deal['ASSIGNED_BY_ID']]["amount"] = $deal['OPPORTUNITY'] ?? null;
                 $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1741000938260'] ?? null;
-                //get the duration from the current date
+                
                 $duration = duration_months($deal['BEGINDATE']);
                 $agents[$deal['ASSIGNED_BY_ID']]["deal_current_duration"] = $duration ?? null;
             }
         } else {
             $agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"] = date('Y-m-d', strtotime($deal['BEGINDATE'])) ?? null;
 
-            // map team value
+        
             $team = map_enum($deal_fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
             $agents[$deal['ASSIGNED_BY_ID']]["team"] = $team ?? null;
 
@@ -102,11 +93,6 @@ if (!empty($deals)) {
 }
 
 echo "<pre>";
-// print_r($deals);
-// print_r($deal_fields);
-// print_r($user_fields);
-// print_r($users);
-// print_r($agents);
 echo "</pre>";
 ?>
 

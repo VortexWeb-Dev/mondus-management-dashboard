@@ -3,19 +3,13 @@ include_once "./crest/crest.php";
 include_once "./crest/settings.php";
 include('includes/header.php');
 
-// get deals
 include_once "./data/fetch_deals.php";
 
-// import utils 
 include_once "./utils/index.php";
 
-//get the year from get request
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 $developer_name = isset($_GET['developer_name']) ? $_GET['developer_name'] : null;
 
-// echo "<pre>";
-// print_r($_GET);
-// echo "</pre>";
 
 $filter = [
     // 'CATEGORY_ID' => 0,
@@ -34,13 +28,12 @@ if (!empty($developer_name)) {
     });
 }
 
-// get the develpers name
 include_once "./static/developers.php";
 $developers = getDevelopers();
 
 if (!empty($deals)) {
 
-    // get deals per deal type
+    
     function get_deals_per_deal_type($deals, $deal_fields)
     {
         $deal_types = $deal_fields['UF_CRM_1741000861839']['items'] ?? [];
@@ -61,9 +54,6 @@ if (!empty($deals)) {
 
     $deals_per_deal_type = get_deals_per_deal_type($deals, $deal_fields);
 
-    // echo "<pre>";
-    // print_r($deals_per_deal_type);
-    // echo "</pre>";
 
     function get_closed_deals($deals)
     {
@@ -211,7 +201,6 @@ if (!empty($deals)) {
     $developerwise_total_deals = array_pop($developerwise_final_deals);
 
 
-    // monthly deals per developer with total monthly and yearly property value
     function get_monthly_deals_per_developer($deals, &$developers)
     {
         $monthlyDealsPerDeveloper = [];
@@ -225,7 +214,7 @@ if (!empty($deals)) {
         foreach ($developers as $developer) {
             $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-            // Monthly calculations
+            
             foreach ($months as $month) {
                 $monthwiseDeals = array_filter($deals, function ($deal) use ($month) {
                     return date('M', strtotime($deal['BEGINDATE'])) == $month;
@@ -240,7 +229,7 @@ if (!empty($deals)) {
                 }, 0);
             }
 
-            // Quarterly calculations
+            
             foreach ($quarters as $quarter => $quarterMonths) {
                 $quarterlyDeals = array_filter($deals, function ($deal) use ($quarterMonths) {
                     return in_array(date('M', strtotime($deal['BEGINDATE'])), $quarterMonths);
@@ -255,7 +244,7 @@ if (!empty($deals)) {
                 }, 0);
             }
 
-            // Total property value calculation
+            
             $monthlyDealsPerDeveloper[$developer]['total_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'], function ($total, $prev) {
                 return isset($prev['total_monthly_property_value']) ? $total + (int)$prev['total_monthly_property_value'] : $total;
             });
@@ -266,17 +255,11 @@ if (!empty($deals)) {
 
     $monthly_deals_per_developer = get_monthly_deals_per_developer($deals, $developers);
 
-    // echo "<pre>";
-    // print_r($monthly_deals_per_developer);
-    // echo "</pre>";
-
-
-    // Deals per lead source
     function get_deals_per_lead_source($deals, $deal_fields)
     {
         $lead_sources = $deal_fields['SOURCE_ID']['items'];
         echo "<pre>";
-        // print_r($lead_sources);
+        
         echo "</pre>";
         $deals_per_lead_source = [];
         foreach ($lead_sources as $lead_source) {
@@ -293,13 +276,8 @@ if (!empty($deals)) {
 
     $deals_per_lead_source = get_deals_per_lead_source($deals, $deal_fields) ?? [];
 
-    // echo "<pre>";
-    // print_r($deals_per_lead_source);
-    // echo "</pre>";
+   
 }
-// echo "<pre>";
-// print_r($deals);
-// echo "</pre>";
 
 ?>
 
@@ -493,7 +471,6 @@ if (!empty($deals)) {
                                 var input = this.value.toLowerCase();
                                 let developers = <?= json_encode($developers) ?>;
 
-                                // Loop through options and hide those that don't match the search query
                                 developers.forEach(function(developer) {
                                     var option = document.getElementById(`developer-${developer}`);
                                     var optionText = developer.toLowerCase();
@@ -519,13 +496,13 @@ if (!empty($deals)) {
                                                         <?php
                                                         $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
                                                         $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
-                                                        // decreasing order
+                                                        
                                                         if ($selected_developer_sort_order == 'desc') {
                                                             uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
                                                                 return $b['total_property_value'] <=> $a['total_property_value'];
                                                             });
                                                         }
-                                                        // increasing order
+                                                        
                                                         else if ($selected_developer_sort_order == 'asc') {
                                                             uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
                                                                 return $a['total_property_value'] <=> $b['total_property_value'];
@@ -629,13 +606,13 @@ if (!empty($deals)) {
                                                 <?php
                                                 $sorted_monthly_deals_per_developer = $monthly_deals_per_developer;
                                                 $selected_developer_sort_order = $_GET['developer_sort_order'] ?? 'desc';
-                                                // decreasing order
+                                                
                                                 if ($selected_developer_sort_order == 'desc') {
                                                     uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
                                                         return $b['total_property_value'] <=> $a['total_property_value'];
                                                     });
                                                 }
-                                                // increasing order
+                                                
                                                 else if ($selected_developer_sort_order == 'asc') {
                                                     uasort($sorted_monthly_deals_per_developer, function ($a, $b) {
                                                         return $a['total_property_value'] <=> $b['total_property_value'];
@@ -716,13 +693,7 @@ if (!empty($deals)) {
 </div>
 
 <script>
-    // get the system theme
-    // function getSystemTheme() {
-    //     if (window.matchMedia) {
-    //         return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    //     }
-    // }
-
+    
 
     function isDarkTheme() {
         return localStorage.getItem('darkMode') === 'true';
@@ -737,7 +708,6 @@ if (!empty($deals)) {
         var offplanDeals = Object.keys(dealsPerDealType['Offplan']).length;
         var secondaryDeals = Object.keys(dealsPerDealType['Secondary']).length;
 
-        // property type
         var options = {
             series: [offplanDeals, secondaryDeals],
             labels: ["Offplan", "Secondary"],
@@ -825,14 +795,14 @@ if (!empty($deals)) {
                 formatter: function(val, opts) {
                     return val + " - " + opts.w.globals.series[opts.seriesIndex]
                 },
-                // position: 'top',
+                
                 offsetY: 0,
                 labels: {
                     colors: `${isdark ? '#ffffff' : '#000000'}`
                 }
             },
             title: {
-                // text: 'Developers VS Property Value',
+                
                 style: {
                     color: `${isdark ? '#ffffff' : '#000000'}`
                 }
@@ -868,10 +838,8 @@ if (!empty($deals)) {
         let gross_commission = {};
 
         for (x in deals_per_lead_source) {
-            // console.log(deals_per_lead_source[x]);
+            
             categories.push(x);
-
-            // initialise_commission_array for all types of leads
             if (net_commission[x] == null) {
                 net_commission[x] = 0;
             }

@@ -47,7 +47,7 @@
          var input = this.value.toLowerCase();
          let developers = <?= json_encode($developers) ?>;
 
-         // Loop through options and hide those that don't match the search query
+
          developers.forEach(function(developer) {
              var option = document.getElementById(developer);
              var optionText = developer.toLowerCase();

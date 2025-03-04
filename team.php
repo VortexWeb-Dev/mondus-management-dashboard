@@ -22,7 +22,7 @@ $teams = [
             "name" => "Sinan V A",
             "email" => "sinan@mondusgroup.com"
         ]
-    ], // 33
+    ], 
     'Sales' => [
         [
             "name" => "Radhika Lamba",
@@ -113,14 +113,12 @@ $teams = [
             const teamMembers = leader.querySelectorAll('.team-member') || [];
             let leaderVisible = false;
 
-            // Check if leader name matches the search term
             if (leaderName.includes(searchTerm)) {
                 leaderVisible = true;
                 teamMembers.forEach(member => {
                     member.style.display = 'flex';
                 });
             } else {
-                // Check if any team member matches the search term
                 teamMembers.forEach(member => {
                     const memberName = member.getAttribute('data-member-name').toLowerCase();
                     if (memberName.includes(searchTerm)) {
@@ -131,8 +129,6 @@ $teams = [
                     }
                 });
             }
-
-            // Show or hide the team leader based on the result
             leader.style.display = leaderVisible ? 'block' : 'none';
         });
     });

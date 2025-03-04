@@ -42,7 +42,6 @@ $developers = getDevelopers();
         let developers = <?= json_encode($developers) ?>;
         console.log(developers);
 
-        // Loop through options and hide those that don't match the search query search
         for (var i = 0; i < developers.length; i++) {
             var optionText = developers[i].toLowerCase();
             if (optionText.includes(input)) {

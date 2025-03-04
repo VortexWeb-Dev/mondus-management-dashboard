@@ -1,5 +1,5 @@
 <?php
-$all_agents = get_filtered_users(['UF_DEPARTMENT' => 5]); // get sales department members only
+$all_agents = get_filtered_users(['UF_DEPARTMENT' => 5]); 
 usort($all_agents, function ($a, $b) {
     return strcasecmp($a['NAME'], $b['NAME']);
 });
@@ -63,7 +63,6 @@ $agent_name = $fname . ' ' . $mname . ' ' . $lname;
         let agents = <?= json_encode($all_agents) ?>;
         console.log(agents);
 
-        // Loop through options and hide those that don't match the search query
         agents.forEach(function(agent) {
             let agentName = `${agent['NAME'] ?? ''} ${agent['SECOND_NAME'] ?? ''} ${agent['LAST_NAME'] ?? ''}`;
             var option = document.getElementById(agent['ID']);

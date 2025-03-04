@@ -4,7 +4,6 @@ include_once __DIR__ .  "/crest/settings.php";
 include_once __DIR__ .  "/utils/index.php";
 include('includes/header.php');
 
-// Include the fetch deals page
 include_once __DIR__ . "/data/fetch_deals.php";
 include_once __DIR__ . "/data/fetch_users.php";
 
@@ -22,7 +21,6 @@ $filter = [
 $dealsData = get_paginated_deals($page) ?? [];
 $deals = $dealsData['deals'] ?? [];
 
-// Pagination
 $total_deals = $dealsData['total'] ?? 0;
 $total_pages = ceil($total_deals / 50);
 
