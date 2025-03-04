@@ -11,6 +11,10 @@ include_once "./controllers/calculate_agent_rank.php";
 
 $global_ranking = calculateAgentRank();
 
+echo '<pre>';
+// print_r($global_ranking);   
+echo '</pre>';
+
 //get the filter data from get request
 $selected_year = isset($_GET['year']) ? explode('/', $_GET['year'])[2] : date('Y');
 

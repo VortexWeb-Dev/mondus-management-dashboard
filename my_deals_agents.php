@@ -24,29 +24,21 @@ $filter = ['CATEGORY_ID' => 0];
 $select = [
     "ID",
     'BEGINDATE',
-    'UF_CRM_1727625723908', // enum: transaction type
-    'UF_CRM_1727625752721', // enum: deal type missing so using pipeline
-    'UF_CRM_1727625779110', // string: project name
-    'UF_CRM_1727625804043', // string: unit no
-    'UF_CRM_1727625822094', // string: developer name
-    'UF_CRM_66E3D8D1A13F7', // enum: property type
-    'UF_CRM_1727854068559', // enum: no of br
-    'UF_CRM_1727854143005', // string: client name
-    'ASSIGNED_BY_ID', // string: agent ID
-    'UF_CRM_1727854555607', // enum: team
-    'OPPORTUNITY', // float: property price
-    'UF_CRM_1727626089404', // string: commission slab
-    'UF_CRM_1728042953037', // enum: referral approved status
-    'UF_CRM_1727628203466', // if yes then show -> string: amount receivable
-    'UF_CRM_1727854893657', // enum: lead source
-    // doubt: documents upload ---------
-    // booking form
-    // pastport copy
-    // EID
-    // kyc
-    // proof of address
-    // down payment receipts
-    // notification for agents until completing the required docs
+    'UF_CRM_1741000822473',
+    'UF_CRM_1741000861839',
+    'UF_CRM_1741000894474',
+    'UF_CRM_1741000903941',
+    'UF_CRM_1727854555607',
+    'SOURCE_ID',
+    'UF_CRM_1728042953037',
+    'UF_CRM_1741000869656',
+    'UF_CRM_1741000878426',
+    'UF_CRM_1741000886208',
+    'UF_CRM_1741063576078',
+    'ASSIGNED_BY_ID',
+    'OPPORTUNITY',
+    'UF_CRM_1727626089404',
+    'UF_CRM_1727628203466',
     //--------------------------------
     'UF_CRM_1727626897246', // enum: down payment (completed)
     'UF_CRM_1727626932600', // enum: dld payment (completed)
@@ -64,38 +56,38 @@ foreach ($filtered_deals as $id => $deal) {
     $current_agent_deals[$id]['id'] = $deal['ID'];
     $current_agent_deals[$id]['date'] = date('Y-m-d', strtotime($deal['BEGINDATE']));
 
-    if (isset($deal['UF_CRM_1727625723908'])) {
-        $transactionType = map_enum($deal_fields, 'UF_CRM_1727625723908', $deal['UF_CRM_1727625723908']);
+    if (isset($deal['UF_CRM_1741000822473'])) {
+        $transactionType = map_enum($deal_fields, 'UF_CRM_1741000822473', $deal['UF_CRM_1741000822473']);
         $current_agent_deals[$id]['transaction_type'] = $transactionType ?? null;
     } else {
         $current_agent_deals[$id]['transaction_type'] = 'field_not_defined';
     }
 
-    if (isset($deal['UF_CRM_1727625752721'])) {
-        $dealType = map_enum($deal_fields, 'UF_CRM_1727625752721', $deal['UF_CRM_1727625752721']);
+    if (isset($deal['UF_CRM_1741000861839'])) {
+        $dealType = map_enum($deal_fields, 'UF_CRM_1741000861839', $deal['UF_CRM_1741000861839']);
         $current_agent_deals[$id]['deal_type'] = $dealType ?? null;
     } else {
         $current_agent_deals[$id]['deal_type'] = 'field_not_defined';
     }
 
-    $current_agent_deals[$id]['project_name'] = $deal['UF_CRM_1727625779110'] ?? null;
-    $current_agent_deals[$id]['unit_no'] = $deal['UF_CRM_1727625804043'] ?? null;
-    $current_agent_deals[$id]['developer_name'] = $deal['UF_CRM_1727625822094'] ?? null;
-    if (isset($deal['UF_CRM_66E3D8D1A13F7'])) {
-        $propertyType = map_enum($deal_fields, 'UF_CRM_66E3D8D1A13F7', $deal['UF_CRM_66E3D8D1A13F7']);
+    $current_agent_deals[$id]['project_name'] = $deal['UF_CRM_1741000869656'] ?? null;
+    $current_agent_deals[$id]['unit_no'] = $deal['UF_CRM_1741000878426'] ?? null;
+    $current_agent_deals[$id]['developer_name'] = $deal['UF_CRM_1741000886208'] ?? null;
+    if (isset($deal['UF_CRM_1741000894474'])) {
+        $propertyType = map_enum($deal_fields, 'UF_CRM_1741000894474', $deal['UF_CRM_1741000894474']);
         $current_agent_deals[$id]['property_type'] = $propertyType ?? null;
     } else {
         $current_agent_deals[$id]['property_type'] = 'field_not_defined';
     }
 
-    if (isset($deal['UF_CRM_1727854068559'])) {
-        $noOfBr = map_enum($deal_fields, 'UF_CRM_1727854068559', $deal['UF_CRM_1727854068559']);
+    if (isset($deal['UF_CRM_1741000903941'])) {
+        $noOfBr = map_enum($deal_fields, 'UF_CRM_1741000903941', $deal['UF_CRM_1741000903941']);
         $current_agent_deals[$id]['no_of_br'] = $noOfBr ?? null;
     } else {
         $current_agent_deals[$id]['no_of_br'] = 'field_not_defined';
     }
 
-    $current_agent_deals[$id]['client_name'] = $deal['UF_CRM_1727854143005'] ?? null;
+    $current_agent_deals[$id]['client_name'] = $deal['UF_CRM_1741063576078'] ?? null;
 
     if (isset($deal['ASSIGNED_BY_ID'])) {
         $agentId = $deal['ASSIGNED_BY_ID'];
@@ -128,8 +120,8 @@ foreach ($filtered_deals as $id => $deal) {
         $current_agent_deals[$id]['amount'] = 'Approve Referral First';
     }
 
-    if (isset($deal['UF_CRM_1727854893657'])) {
-        $leadSource = map_enum($deal_fields, 'UF_CRM_1727854893657', $deal['UF_CRM_1727854893657']);
+    if (isset($deal['SOURCE_ID'])) {
+        $leadSource = map_enum($deal_fields, 'SOURCE_ID', $deal['SOURCE_ID']);
         $current_agent_deals[$id]['lead_source'] = $leadSource ?? null;
     } else {
         $current_agent_deals[$id]['lead_source'] = 'field_not_defined';

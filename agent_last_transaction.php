@@ -77,9 +77,9 @@ if (!empty($deals)) {
                     $agents[$deal['ASSIGNED_BY_ID']]["team"] = 'field_not_defined';
                 }
 
-                $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1727625779110'] ?? null;
+                $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1741000869656'] ?? null;
                 $agents[$deal['ASSIGNED_BY_ID']]["amount"] = $deal['OPPORTUNITY'] ?? null;
-                $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1727628122686'] ?? null;
+                $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1741000938260'] ?? null;
                 //get the duration from the current date
                 $duration = duration_months($deal['BEGINDATE']);
                 $agents[$deal['ASSIGNED_BY_ID']]["deal_current_duration"] = $duration ?? null;
@@ -91,9 +91,9 @@ if (!empty($deals)) {
             $team = map_enum($deal_fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
             $agents[$deal['ASSIGNED_BY_ID']]["team"] = $team ?? null;
 
-            $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1727625779110'] ?? null;
+            $agents[$deal['ASSIGNED_BY_ID']]["project"] = $deal['UF_CRM_1741000869656'] ?? null;
             $agents[$deal['ASSIGNED_BY_ID']]["amount"] = $deal['OPPORTUNITY'] ?? null;
-            $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1727628122686'] ?? null;
+            $agents[$deal['ASSIGNED_BY_ID']]["gross_comms"] = $deal['UF_CRM_1741000938260'] ?? null;
 
             $duration = duration_months($deal['BEGINDATE']);
             $agents[$deal['ASSIGNED_BY_ID']]["deal_current_duration"] = $duration ?? null;

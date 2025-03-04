@@ -30,7 +30,7 @@ $developerwise_deals = $deals;
 
 if (!empty($developer_name)) {
     $developerwise_deals = array_filter($deals, function ($deal) use ($developer_name) {
-        return $deal['UF_CRM_1727625822094'] == $developer_name;
+        return $deal['UF_CRM_1741000886208'] == $developer_name;
     });
 }
 
@@ -43,16 +43,16 @@ if (!empty($deals)) {
     // get deals per deal type
     function get_deals_per_deal_type($deals, $deal_fields)
     {
-        $deal_types = $deal_fields['UF_CRM_1727625752721']['items'] ?? [];
+        $deal_types = $deal_fields['UF_CRM_1741000861839']['items'] ?? [];
 
         $deals_per_deal_type = [];
 
         foreach ($deal_types as $deal_type) {
             $type_id = $deal_type['ID'] ?? null;
-            $deal_type_name = map_enum($deal_fields, 'UF_CRM_1727625752721', $type_id) ?? 'Unknown';
+            $deal_type_name = map_enum($deal_fields, 'UF_CRM_1741000861839', $type_id) ?? 'Unknown';
 
             $deals_per_deal_type[$deal_type_name] = array_filter($deals, function ($deal) use ($type_id) {
-                return $deal['UF_CRM_1727625752721'] ==  $type_id;
+                return $deal['UF_CRM_1741000861839'] ==  $type_id;
             });
         }
 
@@ -68,7 +68,7 @@ if (!empty($deals)) {
     function get_closed_deals($deals)
     {
         return array_filter($deals, function ($deal) {
-            return $deal['CLOSED'] == 'Y';
+            return $deal['STAGE_ID'] == 'WON';
         });
     }
 
@@ -187,7 +187,7 @@ if (!empty($deals)) {
         foreach ($deals as $deal) {
             $final_deals['total']['count_of_closed_deals'] += $deal['CATEGORY_ID'] == 0 ? 1 : 0;
             $final_deals['total']['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-            $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727628122686'])[0] ?? 0;
+            $final_deals['total']['gross_commission'] += (int)explode('|', $deal['UF_CRM_1741000938260'])[0] ?? 0;
             $final_deals['total']['net_commission'] += (int)explode('|', $deal['UF_CRM_1736316474504'])[0] ?? 0;
             $final_deals['total']['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
             $final_deals['total']['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
@@ -195,7 +195,7 @@ if (!empty($deals)) {
             $month = date('F', strtotime($deal['BEGINDATE']));
             $final_deals[$month]['count_of_closed_deals'] += $deal['CATEGORY_ID'] == 0 ? 1 : 0;
             $final_deals[$month]['property_price'] += (int)$deal['OPPORTUNITY'] ?? 0;
-            $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1727628122686'])[0] ?? 0;
+            $final_deals[$month]['gross_commission'] += (int)explode('|', $deal['UF_CRM_1741000938260'])[0] ?? 0;
             $final_deals[$month]['net_commission'] += (int)explode('|', $deal['UF_CRM_1736316474504'])[0] ?? 0;
             $final_deals[$month]['total_payment_received'] += (int)explode('|', $deal['UF_CRM_1727628185464'])[0] ?? 0;
             $final_deals[$month]['amount_receivable'] += $deal['UF_CRM_1727628203466'] ?? 0;
@@ -232,7 +232,7 @@ if (!empty($deals)) {
                 });
 
                 $monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['deals'] = array_filter($monthwiseDeals, function ($deal) use ($developer) {
-                    return $deal['UF_CRM_1727625822094'] == $developer;
+                    return $deal['UF_CRM_1741000886208'] == $developer;
                 });
 
                 $monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['total_monthly_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['monthly_deals'][$month]['deals'], function ($total, $deal) {
@@ -247,7 +247,7 @@ if (!empty($deals)) {
                 });
 
                 $monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['deals'] = array_filter($quarterlyDeals, function ($deal) use ($developer) {
-                    return $deal['UF_CRM_1727625822094'] == $developer;
+                    return $deal['UF_CRM_1741000886208'] == $developer;
                 });
 
                 $monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['total_quarterly_property_value'] = array_reduce($monthlyDealsPerDeveloper[$developer]['quarterly_deals'][$quarter]['deals'], function ($total, $deal) {
@@ -274,17 +274,17 @@ if (!empty($deals)) {
     // Deals per lead source
     function get_deals_per_lead_source($deals, $deal_fields)
     {
-        $lead_sources = $deal_fields['UF_CRM_1727854893657']['items'];
+        $lead_sources = $deal_fields['SOURCE_ID']['items'];
         echo "<pre>";
         // print_r($lead_sources);
         echo "</pre>";
         $deals_per_lead_source = [];
         foreach ($lead_sources as $lead_source) {
             $lead_source_id = $lead_source['ID'];
-            $lead_source_name = map_enum($deal_fields, 'UF_CRM_1727854893657',  $lead_source_id) ?? 'Unknown';
+            $lead_source_name = map_enum($deal_fields, 'SOURCE_ID',  $lead_source_id) ?? 'Unknown';
 
             $deals_per_lead_source[$lead_source_name] = array_filter($deals, function ($deal) use ($lead_source_id) {
-                return $deal['UF_CRM_1727854893657'] ==  $lead_source_id;
+                return $deal['SOURCE_ID'] ==  $lead_source_id;
             });
         }
 
@@ -886,8 +886,8 @@ if (!empty($deals)) {
                         net_commission[x] += parseFloat(deal['UF_CRM_1736316474504'].split('|')[0]);
                     }
 
-                    if (deal['UF_CRM_1727628122686'] != null) {
-                        gross_commission[x] += parseFloat(deal['UF_CRM_1727628122686'].split('|')[0]);
+                    if (deal['UF_CRM_1741000938260'] != null) {
+                        gross_commission[x] += parseFloat(deal['UF_CRM_1741000938260'].split('|')[0]);
                     }
                 });
             } else {
@@ -896,8 +896,8 @@ if (!empty($deals)) {
                         net_commission[x] += parseFloat(deals_per_lead_source[x][deal]['UF_CRM_1736316474504'].split('|')[0]);
                     }
 
-                    if (deals_per_lead_source[x][deal]['UF_CRM_1727628122686'] != null) {
-                        gross_commission[x] += parseFloat(deals_per_lead_source[x][deal]['UF_CRM_1727628122686'].split('|')[0]);
+                    if (deals_per_lead_source[x][deal]['UF_CRM_1741000938260'] != null) {
+                        gross_commission[x] += parseFloat(deals_per_lead_source[x][deal]['UF_CRM_1741000938260'].split('|')[0]);
                     }
                 }
             }
