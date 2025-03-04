@@ -46,12 +46,12 @@ if (!empty($deals)) {
         $agents[$user['ID']]["middle_name"] = $user['SECOND_NAME'] ?? '';
         
         if (isset($user['UF_USR_1728535335261'])) {
-            $hiredBy = map_enum($user_fields, 'UF_USR_1728535335261', $user['UF_USR_1728535335261']);
+            $hiredBy = map_enum($user_fields, 'UF_USR_1741071420052', $user['UF_USR_1741071420052']);
             $agents[$user['ID']]["hired_by"] = $hiredBy ?? null;
         } else {
             $agents[$user['ID']]["hired_by"] = 'field_not_defined';
         }
-        $agents[$user['ID']]["joining_date"] = date('Y-m-d', strtotime($user['UF_USR_1734594730996'])) ?? null;
+        $agents[$user['ID']]["UF_EMPLOYMENT_DATE"] = date('Y-m-d', strtotime($user['UF_USR_1734594730996'])) ?? null;
     }
 
     
@@ -78,7 +78,6 @@ if (!empty($deals)) {
         } else {
             $agents[$deal['ASSIGNED_BY_ID']]["last_deal_date"] = date('Y-m-d', strtotime($deal['BEGINDATE'])) ?? null;
 
-        
             $team = map_enum($deal_fields, 'UF_CRM_1727854555607', $deal['UF_CRM_1727854555607']);
             $agents[$deal['ASSIGNED_BY_ID']]["team"] = $team ?? null;
 
@@ -93,6 +92,11 @@ if (!empty($deals)) {
 }
 
 echo "<pre>";
+// print_r($deals);
+// print_r($deal_fields);
+// print_r($user_fields);
+// print_r($users);
+// print_r($agents);
 echo "</pre>";
 ?>
 
@@ -170,7 +174,7 @@ echo "</pre>";
                                                 <?= $agent['hired_by'] ?? '--' ?>
                                             </td> -->
                                             <td class="px-6 py-4">
-                                                <?= $agent['joining_date'] ?? '--' ?>
+                                                <?= $agent['UF_EMPLOYMENT_DATE'] ?? '--' ?>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <?= $agent['last_deal_date'] ?? '--' ?>
